@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b74d67ac7cba1b40b42607ca76c2a1c, type: 3}
+  m_Name: BoosterConfig
+  m_EditorClassIdentifier: 
+  Boosters:
+  - BoosterPrefab: {fileID: 346237192867157442, guid: aa445972ab29da54eb93fe10daf8d04c, type: 3}
+    Chance: 60
+  - BoosterPrefab: {fileID: 5940100167613473228, guid: 6edfae5deb843fa438c7dd77a5b95af7, type: 3}
+    Chance: 25
+  - BoosterPrefab: {fileID: 8781339857486590777, guid: 90accc5e6a0f06e4381bfd885ddf393e, type: 3}
+    Chance: 10
+  - BoosterPrefab: {fileID: 4074800257837813083, guid: 0d40f5deeee04ab45810e5b5bbacfbfa, type: 3}
+    Chance: 5
