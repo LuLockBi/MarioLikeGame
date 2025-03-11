@@ -1,3 +1,4 @@
+using Mono.Cecil.Cil;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -6,27 +7,43 @@ using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
 
-    [SerializeField] private AudioClip jumpSound;
-
     private int _health = 3;
 
-    public float MoveSpeed = 5f;
-    public float JumpForce = 10f;
-    public float BounceForce = 3f;
+
 
     public TouchingDirections touchingDirections;
-    private Rigidbody2D rb;
+    private Rigidbody2D _rb;
     private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
     private CapsuleCollider2D _collider;
     [SerializeField] private RuntimeAnimatorController _smallMarioController;
     [SerializeField] private AnimatorOverrideController _bigMarioOverrideController;
-    [SerializeField] private Vector2 _bigMarioColliderSize = new (1.2f, 2f);
+    [SerializeField] private AnimatorOverrideController _fireMarioOverrideController;
+    [SerializeField] private Vector2 _bigMarioColliderSize = new(0.8f, 2f);
     private Vector2 _smallMarioColliderSize;
 
+    [Header("Invincibility")]
+    [SerializeField] private float _invincibilityDuration = 10f;
+    [SerializeField] private float _blinkInterval = 0.2f;
+    [SerializeField] private float _invincibilityTimer;
+
+    [Header("Movement")]
+    public float MoveSpeed = 5f;
+    public float JumpForce = 10f;
+    public float BounceForce = 3f;
     private Vector2 _moveInput;
+
+    [Header("Fire")]
+    [SerializeField] private float fireCooldown = 0.5f;
+    [SerializeField] private Transform _firePoint;
+    private float _fireTimer;
+
+    [Header("States")]
     private bool _isMoving;
     private bool _isGrown = false;
-    private bool _isDead;
+    private bool _isDead = false;
+    private bool _isFire = false;
+    private bool _isInvincible = false;
 
     private float CurrentSpeed
     {
@@ -39,8 +56,6 @@ public class PlayerController : MonoBehaviour
             return 0f;
         }
     }
-
-
     private bool IsMoving
     {
         get
@@ -58,18 +73,27 @@ public class PlayerController : MonoBehaviour
     }
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _collider = GetComponent<CapsuleCollider2D>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
 
         _smallMarioColliderSize = _collider.size;
         touchingDirections.OnGroundedChange += UpdateGroundedState;
+
+        _fireTimer = fireCooldown;
     }
 
     private void Update()
     {
 
         Move();
+
+        if (_fireTimer > 0)
+        {
+            _fireTimer -= Time.deltaTime;
+        }
+        UpdateInvincibility();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -81,16 +105,15 @@ public class PlayerController : MonoBehaviour
 
             if (hitDirection.y > 0.5f)
             {
-                Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-                if (enemy != null)
-                {
-                    enemy.TakeDamage();
-                    rb.linearVelocityY = BounceForce;
-                }
+                HandleEnemyKill(collision.gameObject.GetComponent<Enemy>());
+            }
+            else if (!_isInvincible)
+            {
+                TakeDamage();
             }
             else
             {
-                TakeDamage();
+                HandleEnemyKill(collision.gameObject.GetComponent<Enemy>());
             }
         }
 
@@ -119,16 +142,24 @@ public class PlayerController : MonoBehaviour
         }
         else if (collision.gameObject.CompareTag("Mushroom"))
         {
-            Mushroom mushroom = collision.gameObject.GetComponent<Mushroom>();
-            if (mushroom != null)
+            if (!_isGrown)
             {
-                if (!_isGrown)
-                {
-                    Grow();
-                }
+                Grow();
             }
         }
-
+        else if (collision.gameObject.CompareTag("Flower"))
+        {
+            if (!_isFire && _isGrown)
+            {
+                FireMode();
+            }
+        }
+        else if (collision.gameObject.CompareTag("Star"))
+        {
+            _isInvincible = true;
+            _invincibilityTimer = _invincibilityDuration;
+        }
+        
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -147,7 +178,55 @@ public class PlayerController : MonoBehaviour
             if (touchingDirections.IsGrounded)
             {
                 Jump();
-                AudioManager.Instance.PlaySound(jumpSound);
+            }
+        }
+    }
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Fire();
+        }
+    }
+
+    private void UpdateInvincibility()
+    {
+        if (_isInvincible)
+        {
+            _invincibilityTimer -= Time.deltaTime;
+            float blink = Mathf.PingPong(Time.time, _blinkInterval) / _blinkInterval;
+            _spriteRenderer.color = new Color(1, 1, 1, blink > 0.5f ? 1f : 0.5f);
+
+            if (_invincibilityTimer <= 0)
+            {
+                _isInvincible = false;
+                _spriteRenderer.color = Color.white;
+                AudioManager.Instance.StopStarMusic();
+            }
+        }
+    }
+
+    private void Fire()
+    {
+        if (_isFire)
+        {
+            if (_fireTimer <= 0)
+            {
+                Vector2 direction = transform.localScale.x > 0f ? Vector2.right : Vector2.left;
+                FireballPool.Instance.GetFireball(_firePoint.position, direction);
+                _fireTimer = fireCooldown;
+            }
+        }
+    }
+
+    private void HandleEnemyKill(Enemy enemy)
+    {
+        if (enemy != null)
+        {
+            enemy.TakeDamage();
+            if (!_isInvincible)
+            {
+                _rb.linearVelocityY = BounceForce;
             }
         }
     }
@@ -157,7 +236,7 @@ public class PlayerController : MonoBehaviour
 
         if (touchingDirections.IsOnWall != true && !_isDead)
         {
-            rb.linearVelocityX = _moveInput.x * CurrentSpeed;
+            _rb.linearVelocityX = _moveInput.x * CurrentSpeed;
         }
         if (_moveInput.x != 0)
         {
@@ -167,8 +246,9 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        rb.linearVelocityY = JumpForce;
+        _rb.linearVelocityY = JumpForce;
         _animator.SetTrigger("Jump");
+        UnsecuredEventBus.TriggerPlayerJumped();
     }
 
     private void UpdateGroundedState(bool value)
@@ -202,10 +282,15 @@ public class PlayerController : MonoBehaviour
         _collider.size = _bigMarioColliderSize;
         _animator.runtimeAnimatorController = _bigMarioOverrideController;
     }
+    private void FireMode()
+    {
+        _isFire = true;
+        _animator.runtimeAnimatorController = _fireMarioOverrideController;
+    }
     private void Die()
     {
         _isDead = true;
-        rb.linearVelocity = new Vector2(0, 10f);
+        _rb.linearVelocity = new Vector2(0, 10f);
         _collider.enabled = false;
         _animator.SetTrigger("Die");
         UnsecuredEventBus.TriggerPlayerDied();

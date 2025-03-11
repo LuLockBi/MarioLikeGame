@@ -17,7 +17,9 @@ public class ScorePopupPool : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            _pool = new ObjectPool<ScorePopup>(_popupPrefab, _initSize, transform, _autoExpand);
+            _pool = new ObjectPool<ScorePopup>(_popupPrefab, _initSize, transform, _autoExpand,
+                onGet: popup => popup.Activate(0, Vector3.zero),
+                onRelease: popup => popup.gameObject.SetActive(false));
         }
         else
         {
@@ -28,7 +30,7 @@ public class ScorePopupPool : MonoBehaviour
     public ScorePopup GetPopup(int points, Vector3 position)
     {
         ScorePopup popup = _pool.GetFreeElement(position);
-        popup.Activate(points, position); // позже исправить
+        popup.Activate(points, position);
         return popup;
     }
 

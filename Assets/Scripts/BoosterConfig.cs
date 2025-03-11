@@ -31,11 +31,14 @@ public class BoosterConfig : ScriptableObject
                 {
                     return MushroomPool.Instance.GetMushroom(position).gameObject;
                 }
-                //другие типы бонусов 
-                else
+                else if (boost.BoosterPrefab.TryGetComponent<Flower>(out _))
                 {
-                    return Object.Instantiate(boost.BoosterPrefab, position, Quaternion.identity);
+                    return FlowerPool.Instance.GetFlower(position).gameObject;
                 }
+                else if (boost.BoosterPrefab.TryGetComponent<Star>(out _))
+                {
+                    return StarPool.Instance.GetStar(position).gameObject;
+                }       
             }
         }
         return null;

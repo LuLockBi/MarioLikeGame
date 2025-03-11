@@ -6,11 +6,7 @@ using UnityEngine.UI;
 
 public class PauseManager : MonoBehaviour
 {
-    [SerializeField] private AudioClip _pauseSound;
-    [SerializeField] private AudioClip _resumeSound;
     [SerializeField] private GameObject _pauseMenu;
-    [SerializeField][Range(0f, 1f)] private float _soundVolume = 1f;
-
     public static PauseManager Instance { get; private set; }
 
     private bool _isPaused = false;
@@ -120,7 +116,7 @@ public class PauseManager : MonoBehaviour
         _isPaused = true;
         Time.timeScale = 0f;
         if (_pauseMenu != null) _pauseMenu.SetActive(true);
-        AudioManager.Instance.PlaySound(_pauseSound, _soundVolume);
+        UnsecuredEventBus.TriggerPauseToggle();
     }
 
     public void ResumeGame()
@@ -128,7 +124,7 @@ public class PauseManager : MonoBehaviour
         _isPaused = false;
         Time.timeScale = 1f;
         if (_pauseMenu != null) _pauseMenu.SetActive(false);
-        AudioManager.Instance.PlaySound(_resumeSound, _soundVolume);
+        UnsecuredEventBus.TriggerPauseToggle();
     }
 
     public bool IsPaused()

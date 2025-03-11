@@ -43,7 +43,6 @@ public class Mushroom : MonoBehaviour
                 _rb.linearVelocityX = _moveSpeed;
             }
         }
-
     }
 
     public void Collect()

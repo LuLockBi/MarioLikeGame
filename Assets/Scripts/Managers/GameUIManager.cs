@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,7 +8,7 @@ public class GameUIManager : MonoBehaviour
     public static GameUIManager Instance { get; private set; }
 
     [SerializeField] private ScorePopupPool _popupPool;
-    [SerializeField] private Vector3 _popupOffset = new (0, -3f, 0);
+    [SerializeField] private Vector3 _popupOffset = new(0, -3f, 0);
 
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private TextMeshProUGUI _coinText;
@@ -29,13 +30,13 @@ public class GameUIManager : MonoBehaviour
     private void OnEnable()
     {
         SubscribeToEvents();
-        
+
     }
 
     private void OnDisable()
     {
         UnsubscribeFromEvents();
-        
+
     }
     private void SubscribeToEvents()
     {
@@ -45,6 +46,8 @@ public class GameUIManager : MonoBehaviour
         UnsecuredEventBus.OnBlockDestroyed += HandleBlockDestroyed;
         UnsecuredEventBus.OnCoinCollected += HandleCoinCollected;
         UnsecuredEventBus.OnMushroomCollected += HandleMushroomCollected;
+        UnsecuredEventBus.OnFlowerCollected += HandleFlowerCollected;
+        UnsecuredEventBus.OnStarCollected += HandleStarCollected;
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
     private void UnsubscribeFromEvents()
@@ -55,6 +58,8 @@ public class GameUIManager : MonoBehaviour
         UnsecuredEventBus.OnBlockDestroyed -= HandleBlockDestroyed;
         UnsecuredEventBus.OnCoinCollected -= HandleCoinCollected;
         UnsecuredEventBus.OnMushroomCollected -= HandleMushroomCollected;
+        UnsecuredEventBus.OnFlowerCollected -= HandleFlowerCollected;
+        UnsecuredEventBus.OnStarCollected -= HandleStarCollected;
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -64,7 +69,7 @@ public class GameUIManager : MonoBehaviour
 
     private void BindUIElements()
     {
-        GameObject uiContainer = GameObject.Find("===UI==="); 
+        GameObject uiContainer = GameObject.Find("===UI===");
         if (uiContainer == null)
         {
             Debug.LogError("Контейнер не найден в сцене");
@@ -98,7 +103,8 @@ public class GameUIManager : MonoBehaviour
         {
             _scoreText.text = $"Score: {newScore:000000}";
         }
-    }private void UpdateCoinText(int newCoins)
+    }
+    private void UpdateCoinText(int newCoins)
     {
         if (_coinText != null)
         {
@@ -122,5 +128,12 @@ public class GameUIManager : MonoBehaviour
     {
         _popupPool.GetPopup(points, position + _popupOffset);
     }
-
+    private void HandleFlowerCollected(Vector3 position, int points)
+    {
+        _popupPool.GetPopup(points, position + _popupOffset);
+    }
+    private void HandleStarCollected(Vector3 position, int points)
+    {
+        _popupPool.GetPopup(points, position + _popupOffset);
+    }
 }

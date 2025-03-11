@@ -35,6 +35,8 @@ public class ScoreManager : MonoBehaviour
         UnsecuredEventBus.OnEnemyKilled += HandleEnemyKilled;
         UnsecuredEventBus.OnCoinCollected += HandleCoinCollected;
         UnsecuredEventBus.OnMushroomCollected += HandleMushroomCollected;
+        UnsecuredEventBus.OnFlowerCollected += HandleFlowerCollected;
+        UnsecuredEventBus.OnStarCollected += HandleStarCollected;
         UnsecuredEventBus.OnBlockDestroyed += HandleBlockDestroyed;
     }
 
@@ -43,6 +45,8 @@ public class ScoreManager : MonoBehaviour
         UnsecuredEventBus.OnEnemyKilled -= HandleEnemyKilled;
         UnsecuredEventBus.OnCoinCollected -= HandleCoinCollected;
         UnsecuredEventBus.OnMushroomCollected -= HandleMushroomCollected;
+        UnsecuredEventBus.OnFlowerCollected -= HandleFlowerCollected;
+        UnsecuredEventBus.OnStarCollected -= HandleStarCollected;
         UnsecuredEventBus.OnBlockDestroyed -= HandleBlockDestroyed;
     }
 
@@ -87,6 +91,14 @@ public class ScoreManager : MonoBehaviour
     }
 
     private void HandleMushroomCollected(Vector3 position, int points)
+    {
+        AddScore(points);
+    }
+    private void HandleFlowerCollected(Vector3 position, int points)
+    {
+        AddScore(points);
+    }
+    private void HandleStarCollected(Vector3 position, int points)
     {
         AddScore(points);
     }

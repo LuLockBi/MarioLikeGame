@@ -1,4 +1,4 @@
-//using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,13 +11,15 @@ public class ObjectPool<T> where T : MonoBehaviour
 
     private List<T> _pool;
 
-    //private readonly Action<T> _onGet; // init
-    //private readonly Action<T> _onRelease;//clearing
-    public ObjectPool(T prefab, int size, Transform itemContainer,bool autoExpand = false)
+    private readonly Action<T> _onGet; // init
+    private readonly Action<T> _onRelease; //clearing
+    public ObjectPool(T prefab, int size, Transform itemContainer,bool autoExpand = false, Action<T> onGet = null, Action<T> onRelease = null)
     {
         this.Prefab = prefab;
         this.ItemContainer = itemContainer;
         this.AutoExpand = autoExpand;
+        this._onGet = onGet;
+        this._onRelease = onRelease;
         CreatePool(size);
     }
 
@@ -61,14 +63,14 @@ public class ObjectPool<T> where T : MonoBehaviour
         {
             element.transform.SetPositionAndRotation(position != default ? position : element.transform.position, rotation != default ? rotation : Quaternion.identity);
             element.gameObject.SetActive(true);
-            //_onGet?.Invoke(element);
+            _onGet?.Invoke(element);
             return element;
         }
         if (this.AutoExpand)
         {
             element = CreateObject(true);
             element.transform.SetPositionAndRotation(position, rotation);
-            //_onGet?.Invoke(element);
+            _onGet?.Invoke(element);
             return element;
         }
         throw new System.Exception($"pool type {typeof(T)}" + "has no free element");
@@ -82,7 +84,7 @@ public class ObjectPool<T> where T : MonoBehaviour
             return;
         }
 
-        //_onRelease?.Invoke(element);
+        _onRelease?.Invoke(element);
         element.gameObject.SetActive(false);
     }
 
