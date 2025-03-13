@@ -2,18 +2,18 @@ using UnityEngine;
 
 public abstract class Block : MonoBehaviour
 {
-    protected SpriteRenderer spriteRenderer; 
-    protected bool isHit = false;           
+    protected SpriteRenderer _spriteRenderer; 
+    protected bool _isHit = false;           
 
     protected virtual void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void Hit()
     {
-        if (isHit) return; 
-        isHit = true;      
+        if (_isHit) return; 
+        _isHit = true;      
         OnHit();           
     }
 

@@ -1,20 +1,28 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public static class UnsecuredEventBus
 {
     public static event Action<int> OnScoreChanged;
     public static event Action<int> OnCoinsChanged;
+    public static event Action<int> OnHealthChanged;
     public static event Action<Vector3, int> OnEnemyKilled;
     public static event Action<Vector3, int> OnBlockDestroyed;
     public static event Action<Vector3, int> OnCoinCollected;
     public static event Action<Vector3, int> OnMushroomCollected;
     public static event Action<Vector3, int> OnFlowerCollected;
     public static event Action<Vector3, int> OnStarCollected;
+    public static event Action<Vector3, int> OnFlagReached;
+    public static event Action OnLevelCompleted;
+    public static event Action OnFlagLowered;
+    public static event Action OnInvincibilityEnded;
     public static event Action OnPlayerJumped;
     public static event Action OnPlayerDied;
     public static event Action<GameObject> OnUILoaded;
     public static event Action OnPauseToggle;
+    public static event Action OnGameLose;
+    public static event Action OnPlayerFire;
 
     public static void TriggerScoreChanged(int newScore)
     {
@@ -24,6 +32,11 @@ public static class UnsecuredEventBus
     {
         OnCoinsChanged?.Invoke(newCoinCount);
     }
+    public static void TriggerHealthChanged(int newLives)
+    {
+        OnHealthChanged?.Invoke(newLives);
+    }
+
     public static void TriggerEnemyKilled(Vector3 position, int points)
     {
         OnEnemyKilled?.Invoke(position, points);
@@ -63,5 +76,29 @@ public static class UnsecuredEventBus
     public static void TriggerPauseToggle()
     {
         OnPauseToggle?.Invoke();
+    }
+    public static void TriggerInvincibilityEnded()
+    {
+        OnInvincibilityEnded?.Invoke();
+    }
+    public static void TriggerFlagLowered()
+    {
+        OnFlagLowered?.Invoke();
+    }
+    public static void TriggerFlagReached(Vector3 position, int points)
+    {
+        OnFlagReached?.Invoke(position, points);
+    }
+    public static void TriggerLevelCompleted()
+    {
+        OnLevelCompleted?.Invoke();
+    }
+    public static void TriggerGameLose()
+    {
+        OnGameLose?.Invoke();
+    }
+    public static void TriggerPlayerFire()
+    {
+        OnPlayerFire?.Invoke();
     }
 }

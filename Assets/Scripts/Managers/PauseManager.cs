@@ -136,7 +136,6 @@ public class PauseManager : MonoBehaviour
     {
         _isPaused = false;
         Time.timeScale = 1f;
-        SceneManager.LoadScene(0); // Индекс сцены MainMenu
-        //Debug.Log("нужно добавить первую сцену в загрузку проекта");
+        SceneManager.LoadScene(0); 
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,6 +11,7 @@ public class GameUIManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI _scoreText;
     [SerializeField] private TextMeshProUGUI _coinText;
+    [SerializeField] private TextMeshProUGUI _livesText;
 
     private void Awake()
     {
@@ -25,6 +25,7 @@ public class GameUIManager : MonoBehaviour
             Destroy(gameObject);
         }
         UpdateScoreText(0);
+        UpdateLivesText(0);
     }
 
     private void OnEnable()
@@ -42,24 +43,28 @@ public class GameUIManager : MonoBehaviour
     {
         UnsecuredEventBus.OnScoreChanged += UpdateScoreText;
         UnsecuredEventBus.OnCoinsChanged += UpdateCoinText;
+        UnsecuredEventBus.OnHealthChanged += UpdateLivesText;
         UnsecuredEventBus.OnEnemyKilled += HandleEnemyKilled;
         UnsecuredEventBus.OnBlockDestroyed += HandleBlockDestroyed;
         UnsecuredEventBus.OnCoinCollected += HandleCoinCollected;
         UnsecuredEventBus.OnMushroomCollected += HandleMushroomCollected;
         UnsecuredEventBus.OnFlowerCollected += HandleFlowerCollected;
         UnsecuredEventBus.OnStarCollected += HandleStarCollected;
+        UnsecuredEventBus.OnFlagReached += HandleFlagReached;
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
     private void UnsubscribeFromEvents()
     {
         UnsecuredEventBus.OnScoreChanged -= UpdateScoreText;
         UnsecuredEventBus.OnCoinsChanged -= UpdateCoinText;
+        UnsecuredEventBus.OnHealthChanged -= UpdateLivesText;
         UnsecuredEventBus.OnEnemyKilled -= HandleEnemyKilled;
         UnsecuredEventBus.OnBlockDestroyed -= HandleBlockDestroyed;
         UnsecuredEventBus.OnCoinCollected -= HandleCoinCollected;
         UnsecuredEventBus.OnMushroomCollected -= HandleMushroomCollected;
         UnsecuredEventBus.OnFlowerCollected -= HandleFlowerCollected;
         UnsecuredEventBus.OnStarCollected -= HandleStarCollected;
+        UnsecuredEventBus.OnFlagReached -= HandleFlagReached;
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -88,10 +93,12 @@ public class GameUIManager : MonoBehaviour
         {
             _scoreText = infoPanel.Find("ScoreText")?.GetComponent<TextMeshProUGUI>();
             _coinText = infoPanel.Find("CoinsText")?.GetComponent<TextMeshProUGUI>();
+            _livesText = infoPanel.Find("LiveNumberText")?.GetComponent<TextMeshProUGUI>();
         }
 
         if (_scoreText == null) Debug.LogError("ScoreText не найден в InfoPanel");
         if (_coinText == null) Debug.LogError("CoinsText не найден в InfoPanel");
+        if (_livesText == null) Debug.LogError("LiveNumberText не найден в InfoPanel");
 
         if (_scoreText != null) UpdateScoreText(ScoreManager.Instance.GetScore());
         if (_coinText != null) UpdateCoinText(ScoreManager.Instance.GetCoins());
@@ -101,14 +108,21 @@ public class GameUIManager : MonoBehaviour
     {
         if (_scoreText != null)
         {
-            _scoreText.text = $"Score: {newScore:000000}";
+            _scoreText.text = $"Score {newScore:000000}";
         }
     }
     private void UpdateCoinText(int newCoins)
     {
         if (_coinText != null)
         {
-            _coinText.text = $"Coins: {newCoins:0}";
+            _coinText.text = $"Coins {newCoins:0}";
+        }
+    }
+    private void UpdateLivesText(int lives)
+    {
+        if (_livesText != null)
+        {
+            _livesText.text = $"Lives {lives: 0}";
         }
     }
 
@@ -133,6 +147,10 @@ public class GameUIManager : MonoBehaviour
         _popupPool.GetPopup(points, position + _popupOffset);
     }
     private void HandleStarCollected(Vector3 position, int points)
+    {
+        _popupPool.GetPopup(points, position + _popupOffset);
+    }
+    private void HandleFlagReached(Vector3 position, int points)
     {
         _popupPool.GetPopup(points, position + _popupOffset);
     }

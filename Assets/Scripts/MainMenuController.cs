@@ -5,7 +5,7 @@ public class MainMenuController : MonoBehaviour
 {
     public void StartGame()
     {
-        SceneManager.LoadScene(1); // Индекс игровой сцены в Build Settings
+        SceneManager.LoadScene(1); 
     }
 
     public void QuitGame()

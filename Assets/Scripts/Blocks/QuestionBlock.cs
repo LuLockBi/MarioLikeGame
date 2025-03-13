@@ -10,7 +10,7 @@ public class QuestionBlock : Block
     {
         if (DisabledSprite != null)
         {
-            spriteRenderer.sprite = DisabledSprite;
+            _spriteRenderer.sprite = DisabledSprite;
         }
 
         SpawnRandomBooster();

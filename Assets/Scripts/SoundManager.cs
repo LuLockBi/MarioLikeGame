@@ -11,8 +11,9 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip _playerDeathSound;
     [SerializeField] private AudioClip _playerJumpSound;
     [SerializeField] private AudioClip _togglePauseSound;
+    [SerializeField] private AudioClip _FlagLoweringSound;
+    [SerializeField] private AudioClip _fireSound;
     
-
     public static SoundManager Instance { get; private set; }
 
     private void Awake()
@@ -49,6 +50,9 @@ public class SoundManager : MonoBehaviour
         UnsecuredEventBus.OnPlayerDied += HandlePlayerDied;
         UnsecuredEventBus.OnPlayerJumped += HandlePlayerJumped;
         UnsecuredEventBus.OnPauseToggle += HandlePauseToggle;
+        UnsecuredEventBus.OnInvincibilityEnded += HandleInvincibilityEnded;
+        UnsecuredEventBus.OnFlagReached += HandleFlagReached;
+        UnsecuredEventBus.OnPlayerFire += HandlePlayerFire;
     }
     private void UnsubscribeFromEvents()
     {
@@ -61,6 +65,9 @@ public class SoundManager : MonoBehaviour
         UnsecuredEventBus.OnPlayerDied -= HandlePlayerDied;
         UnsecuredEventBus.OnPlayerJumped -= HandlePlayerJumped;
         UnsecuredEventBus.OnPauseToggle -= HandlePauseToggle;
+        UnsecuredEventBus.OnInvincibilityEnded -= HandleInvincibilityEnded;
+        UnsecuredEventBus.OnFlagReached -= HandleFlagReached;
+        UnsecuredEventBus.OnPlayerFire -= HandlePlayerFire;
     }
 
     private void HandleCoinCollected(Vector3 position, int points)
@@ -74,10 +81,6 @@ public class SoundManager : MonoBehaviour
     private void HandleFlowerCollected(Vector3 position, int points)
     {
         AudioManager.Instance.PlaySound(_flowerSound, 1f);
-    }
-    private void HandleStarCollected(Vector3 position, int points)
-    {
-        AudioManager.Instance.PlayStarMusic(_starSound, 0.5f);
     }
     private void HandleBlockDestroyed(Vector3 position, int points)
     {
@@ -100,5 +103,22 @@ public class SoundManager : MonoBehaviour
     private void HandlePauseToggle()
     {
         AudioManager.Instance.PlaySound(_togglePauseSound, 1f);
+    }
+    private void HandleStarCollected(Vector3 position, int points)
+    {
+        AudioManager.Instance.PauseBackgroundMusic();
+        AudioManager.Instance.PlayStarMusic(_starSound, 0.5f);
+    }
+    private void HandleInvincibilityEnded()
+    {
+        AudioManager.Instance.StopStarMusic();
+    }
+    private void HandleFlagReached(Vector3 position, int points)
+    {
+        AudioManager.Instance.PlaySound(_FlagLoweringSound, 1f);
+    }
+    private void HandlePlayerFire()
+    {
+        AudioManager.Instance.PlaySound(_fireSound, 1f);
     }
 }

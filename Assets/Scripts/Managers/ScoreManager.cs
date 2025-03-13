@@ -38,6 +38,8 @@ public class ScoreManager : MonoBehaviour
         UnsecuredEventBus.OnFlowerCollected += HandleFlowerCollected;
         UnsecuredEventBus.OnStarCollected += HandleStarCollected;
         UnsecuredEventBus.OnBlockDestroyed += HandleBlockDestroyed;
+        UnsecuredEventBus.OnFlagReached += HandleFlagReached;
+        UnsecuredEventBus.OnGameLose += HandeGameLose;
     }
 
     private void UnsubscribeFromEvents()
@@ -48,6 +50,8 @@ public class ScoreManager : MonoBehaviour
         UnsecuredEventBus.OnFlowerCollected -= HandleFlowerCollected;
         UnsecuredEventBus.OnStarCollected -= HandleStarCollected;
         UnsecuredEventBus.OnBlockDestroyed -= HandleBlockDestroyed;
+        UnsecuredEventBus.OnFlagReached -= HandleFlagReached;
+        UnsecuredEventBus.OnGameLose -= HandeGameLose;
     }
 
 
@@ -105,5 +109,13 @@ public class ScoreManager : MonoBehaviour
     private void HandleBlockDestroyed(Vector3 position, int points)
     {
         AddScore(points);
+    }
+    private void HandleFlagReached(Vector3 position, int points)
+    {
+        AddScore(points);
+    }
+    private void HandeGameLose()
+    {
+        ResetScore();
     }
 }
