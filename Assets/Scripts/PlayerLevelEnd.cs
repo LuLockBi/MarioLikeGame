@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerHealth))]
+[RequireComponent(typeof(PlayerState))]
 public class PlayerLevelEnd : MonoBehaviour
 {
     [SerializeField] private Transform _castlePosition;
@@ -8,7 +8,7 @@ public class PlayerLevelEnd : MonoBehaviour
 
     private Rigidbody2D _rb;
     private Animator _animator;
-    private PlayerHealth _health;
+    private PlayerState _health;
     private PlayerMovement _playerMovement;
     private bool _isFlagReached;
     private bool _isLevelEnding;
@@ -17,7 +17,7 @@ public class PlayerLevelEnd : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
-        _health = GetComponent<PlayerHealth>();
+        _health = GetComponent<PlayerState>();
         _playerMovement = GetComponent<PlayerMovement>();
     }
 

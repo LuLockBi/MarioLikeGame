@@ -4,10 +4,15 @@ public class BrickFragment : MonoBehaviour
 {
     private readonly float _lifetime = 1f; 
     [SerializeField] private Rigidbody2D _rb;
+    [SerializeField] private bool _isLeftFragment;
 
-    private void Start()
+    private void OnEnable()
     {
-        Destroy(gameObject, _lifetime); 
+        Invoke(nameof(ReturnToPool), _lifetime);
+    }
+    private void OnDisable()
+    {
+        CancelInvoke(nameof(ReturnToPool));
     }
 
     public void Initialize(Vector2 force)
@@ -16,4 +21,17 @@ public class BrickFragment : MonoBehaviour
         _rb.linearVelocity = force;
         _rb.angularVelocity = Random.Range(-200f, 200f);
     }
+
+    private void ReturnToPool()
+    {
+        if (_isLeftFragment)
+        {
+            BrickFragmentPool.Instance.ReturnLeftFragment(this);
+        }
+        else
+        {
+            BrickFragmentPool.Instance.ReturnRightFragment(this);
+        }
+    }
+    
 }

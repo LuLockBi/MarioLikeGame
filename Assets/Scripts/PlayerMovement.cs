@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(TouchingDirections),typeof(PlayerHealth))]
+[RequireComponent(typeof(TouchingDirections),typeof(PlayerState))]
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D _rb;
     private Animator _animator;
     private TouchingDirections _tdirections;
-    private PlayerHealth _health;
+    private PlayerState _health;
     private Vector2 _moveInput;
     private bool _isMoving;
 
@@ -35,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _tdirections = GetComponent<TouchingDirections>();
-        _health = GetComponent<PlayerHealth>();
+        _health = GetComponent<PlayerState>();
 
         _tdirections.OnGroundedChange += UpdateGroundedState;
     }

@@ -1,18 +1,18 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(PlayerHealth))]
+[RequireComponent(typeof(PlayerState))]
 public class PlayerWeapon : MonoBehaviour
 {
     [SerializeField] private float _fireCooldown = 0.5f;
     [SerializeField] private Transform _firePoint;
 
-    private PlayerHealth _health;
+    private PlayerState _health;
     private float _fireTimer;
 
     private void Awake()
     { 
-        _health = GetComponent<PlayerHealth>();
+        _health = GetComponent<PlayerState>();
         _fireTimer = _fireCooldown;
     }
 

@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public static class UnsecuredEventBus
 {
@@ -19,11 +18,10 @@ public static class UnsecuredEventBus
     public static event Action OnInvincibilityEnded;
     public static event Action OnPlayerJumped;
     public static event Action OnPlayerDied;
-    public static event Action<GameObject> OnUILoaded;
     public static event Action OnPauseToggle;
     public static event Action OnGameLose;
     public static event Action OnPlayerFire;
-
+    public static event Action OnLevelRestarted;
     public static void TriggerScoreChanged(int newScore)
     {
         OnScoreChanged?.Invoke(newScore);
@@ -36,7 +34,6 @@ public static class UnsecuredEventBus
     {
         OnHealthChanged?.Invoke(newLives);
     }
-
     public static void TriggerEnemyKilled(Vector3 position, int points)
     {
         OnEnemyKilled?.Invoke(position, points);
@@ -69,10 +66,6 @@ public static class UnsecuredEventBus
     {
         OnPlayerJumped?.Invoke();
     }
-    public static void TriggerUILoaded(GameObject uiRoot)
-    {
-        OnUILoaded?.Invoke(uiRoot);
-    }
     public static void TriggerPauseToggle()
     {
         OnPauseToggle?.Invoke();
@@ -100,5 +93,9 @@ public static class UnsecuredEventBus
     public static void TriggerPlayerFire()
     {
         OnPlayerFire?.Invoke();
+    }
+    public static void TriggerLevelRestarted()
+    {
+        OnLevelRestarted.Invoke();
     }
 }

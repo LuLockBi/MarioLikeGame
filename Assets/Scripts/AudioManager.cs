@@ -3,9 +3,9 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance { get; private set; }
-    [SerializeField] private AudioSource _effectsSource;
-    [SerializeField] private AudioSource _starMusicSource;
-    [SerializeField] private AudioSource _backgroundSource;
+    private AudioSource _effectsSource;
+    private AudioSource _starMusicSource;
+    private AudioSource _backgroundSource;
     [SerializeField] private AudioClip _defaultBackgroundMusic;
     [SerializeField] private AudioClip _victoryMusic;
 
@@ -42,12 +42,14 @@ public class AudioManager : MonoBehaviour
         UnsecuredEventBus.OnPauseToggle += HandlePauseToggle;
         UnsecuredEventBus.OnFlagReached += HandleFlagReached;
         UnsecuredEventBus.OnFlagLowered += HandleFlagLowered;
+        UnsecuredEventBus.OnLevelRestarted += HandleLevelRestarted;
     }
     private void OnDisable()
     {
         UnsecuredEventBus.OnPauseToggle -= HandlePauseToggle;
         UnsecuredEventBus.OnFlagReached -= HandleFlagReached;
         UnsecuredEventBus.OnFlagLowered -= HandleFlagLowered;
+        UnsecuredEventBus.OnLevelRestarted -= HandleLevelRestarted;
     }
 
     public void PlaySound(AudioClip clip, float volume = 1f)
@@ -112,6 +114,25 @@ public class AudioManager : MonoBehaviour
         _starMusicSource.Play();
     }
 
+    public void StopAllMusic()
+    {
+        _backgroundSource.Stop();
+        _starMusicSource.Stop();
+        _isBackgroundPlaying = true; 
+    }
+
+    private void ResetBackgroundMusic()
+    {
+        if (_defaultBackgroundMusic != null)
+        {
+            _isBackgroundPlaying = true;
+            _backgroundSource.Stop();
+            _backgroundSource.clip = _defaultBackgroundMusic;
+            _backgroundSource.volume = 0.5f;
+            _backgroundSource.Play();
+        }
+    }
+
     private void HandlePauseToggle()
     {
         if (!_isPaused)
@@ -155,5 +176,9 @@ public class AudioManager : MonoBehaviour
             _backgroundSource.volume = 0.5f;
             _backgroundSource.Play();
         }
+    }
+    private void HandleLevelRestarted()
+    {
+        ResetBackgroundMusic();
     }
 }

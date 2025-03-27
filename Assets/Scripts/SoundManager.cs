@@ -95,6 +95,7 @@ public class SoundManager : MonoBehaviour
     private void HandlePlayerDied()
     {
         AudioManager.Instance.PlaySound(_playerDeathSound, 1f);
+        AudioManager.Instance.StopAllMusic();
     }
     private void HandlePlayerJumped()
     {

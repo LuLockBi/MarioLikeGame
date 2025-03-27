@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 2749095519618012019}
+  _isLeftFragment: 1
 --- !u!50 &2749095519618012019
 Rigidbody2D:
   serializedVersion: 5

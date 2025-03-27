@@ -11,9 +11,11 @@ public class PauseManager : MonoBehaviour
 
     private bool _isPaused = false;
 
-    private Button continueButton;
+    
+
+    [SerializeField] private Button continueButton;
     //private Button settingsButton;
-    private Button mainMenuButton;
+    [SerializeField] private Button mainMenuButton;
     void Awake()
     {
         if (Instance == null)
@@ -28,15 +30,6 @@ public class PauseManager : MonoBehaviour
 
         if (_pauseMenu != null) _pauseMenu.SetActive(false);
     }
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -47,70 +40,8 @@ public class PauseManager : MonoBehaviour
                 PauseGame();
         }
     }
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        BindUIElements();
-    }
 
-    private void BindUIElements()
-    {
-        GameObject uiContainer = GameObject.Find("===UI===");
-        if (uiContainer == null)
-        {
-            Debug.LogError("Контейнер не найден в сцене");
-            return;
-        }
-
-        Transform gameUITransform = uiContainer.transform.Find("GameUI");
-        if (gameUITransform == null)
-        {
-            Debug.LogError("GameUI не найден в Контейнер/UI");
-            return;
-        }
-
-        _pauseMenu = gameUITransform.Find("PauseMenu")?.gameObject;
-        if (_pauseMenu == null)
-        {
-            Debug.LogError("PauseMenu не найден в GameUI");
-        }
-
-        Transform containerTransform = _pauseMenu.transform.Find("Container");
-        if (containerTransform != null)
-        {
-            continueButton = containerTransform.Find("ResumeButton")?.GetComponent<Button>();
-            //settingsButton = containerTransform.Find("SettingsButton")?.GetComponent<Button>();
-            mainMenuButton = containerTransform.Find("MainMenuButton")?.GetComponent<Button>();
-
-            if (continueButton != null)
-            {
-                continueButton.onClick.RemoveAllListeners();
-                continueButton.onClick.AddListener(ResumeGame);
-            }
-            //if (settingsButton != null)
-            //{
-            //    settingsButton.onClick.RemoveAllListeners();
-            //    settingsButton.onClick.AddListener(ReturnToMenu);
-            //}
-            if (mainMenuButton != null)
-            {
-                mainMenuButton.onClick.RemoveAllListeners();
-                mainMenuButton.onClick.AddListener(ReturnToMenu);
-            }
-
-            if (continueButton == null) Debug.LogError("ResumeButton не найден");
-            //if (settingsButton == null) Debug.LogError("SettingsButton не найден");
-            if (mainMenuButton == null) Debug.LogError("MainMenuButton не найден");
-        }
-        else
-        {
-            Debug.LogError("Container не найден в PauseMenu");
-        }
-
-        if(_pauseMenu != null)
-        {
-            _pauseMenu.SetActive(false);
-        }
-    }
+   
     public void PauseGame()
     {
         _isPaused = true;
