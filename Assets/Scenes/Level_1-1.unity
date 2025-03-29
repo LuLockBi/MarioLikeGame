@@ -7985,7 +7985,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: -1.62, z: -10}
+  m_LocalPosition: {x: 184.97, y: -1.62, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8106,7 +8106,7 @@ GameObject:
   - component: {fileID: 580819990}
   - component: {fileID: 580819989}
   - component: {fileID: 580819991}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -8177,7 +8177,7 @@ Transform:
   m_GameObject: {fileID: 580819977}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: -1.62, z: 0}
+  m_LocalPosition: {x: 184.97, y: -1.62, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13797,7 +13797,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1157533997}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: FireSpawner
   m_TagString: Untagged
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
@@ -14445,7 +14445,7 @@ Transform:
   m_GameObject: {fileID: 1438053321}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: -1.62, z: -10}
+  m_LocalPosition: {x: 184.97, y: -1.62, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15443,7 +15443,6 @@ GameObject:
   - component: {fileID: 1729329961}
   - component: {fileID: 1729329962}
   - component: {fileID: 1729329963}
-  - component: {fileID: 1729329964}
   m_Layer: 0
   m_Name: ===Systems===
   m_TagString: Untagged
@@ -15592,21 +15591,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _popupPool: {fileID: 624129492}
   _popupOffset: {x: 0, y: -3, z: 0}
---- !u!114 &1729329964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1729329952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec6944fe7abf1364ca84604f2707d747, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _persistentObjects:
-  - {fileID: 624129489}
-  - {fileID: 2735873403343151537}
 --- !u!1 &1763776529
 GameObject:
   m_ObjectHideFlags: 0
